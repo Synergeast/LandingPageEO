@@ -31,9 +31,9 @@ export default function Footer() {
               <Instagram size={24} />
             </a>
           </div>
-          <a href="/" className="flex items-center space-x-2 text-sm hover:text-yellow-400 transition-colors">
+          <a href="#" className="flex items-center space-x-2 text-sm hover:text-yellow-400 transition-colors">
             <Mail size={18} />
-            <span>Subscribe to Newsletter</span>
+            <span>Subscribe to Newsletter (will come soon)</span>
           </a>
         </div>
 
