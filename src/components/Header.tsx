@@ -3,11 +3,13 @@ import {useState, useEffect} from 'react';
 import ImageLogo from '../images/Logo-Synergeast-New-(White).png';
 
 export default function Header() {
-    const [dateTime, setDateTime] = useState(new Date());
+    const myDateTime = new Date("2025-11-23");
+
+    const [dateTime, setDateTime] = useState(myDateTime);
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setDateTime(new Date());
+            setDateTime(myDateTime);
         }, 1000);
 
         return () => clearInterval(timer);
