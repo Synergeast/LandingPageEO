@@ -86,12 +86,12 @@ export default function Home() {
     const backgroundSize = getBackgroundSize();
     const backgroundPosition = getBackgrounPositionn();
 
-    // MODIFIED: Button placement logic for right-center alignment
+    // MODIFIED: Logic for vertical centering on mobile.
+    // Use 'inset-y-0' (top-0 and bottom-0) to make the container full height,
+    // then 'items-center' to vertically align the button.
     const buttonPlacementClass = deviceType === 'mobile'
-        ? 'bottom-4 inset-x-0 flex justify-center' // Centered on mobile
-        // Right-Center alignment: absolute, full height (inset-y-0), right-aligned (right-8), and vertically centered (items-center)
-        : 'inset-y-0 right-8 flex items-center justify-end';
-
+        ? 'inset-y-0 inset-x-0 flex justify-center items-center' // Centered vertically and horizontally on mobile
+        : 'inset-y-0 right-8 flex items-center justify-end'; // Right-Center alignment for desktop
 
     const openBuyTicket = (() => {
         const URL = "https://artatix.co.id/event/runacrossthesustain_rats";
@@ -128,8 +128,11 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className={`absolute z-10 p-4 w-full h-full ${buttonPlacementClass}`}>
+                {/* Button Container - Changed from 'relative' to 'absolute' for correct positioning */}
+                <div className={`absolute z-10 p-4 w-full ${buttonPlacementClass}`}>
                     <button
+                        // NOTE: These sizing classes (px-8, py-4, text-lg) are non-responsive,
+                        // ensuring the button size remains uniform across all screen widths.
                         className="bg-white text-black px-8 py-4 text-lg font-semibold hover:bg-yellow-300 transition-all transform hover:scale-105 shadow-lg rounded-xl"
                         onClick={openBuyTicket}
                     >
@@ -138,7 +141,7 @@ export default function Home() {
                 </div>
 
 
-                {/* Image Navigation Dots */}
+                {/* Image Navigation Dots - Keeping this at the bottom */}
                 <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
                     {images.map((_, index) => (
                         <button
