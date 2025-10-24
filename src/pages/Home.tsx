@@ -1,22 +1,69 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CookieConsentComponent from "./CookieConsentComponent.tsx";
 
 import imageOrangLari from '../banners/orang-orang-lari.jpg';
 
-const images = [
-    imageOrangLari,
-    'https://images.pexels.com/photos/1647121/pexels-photo-1647121.jpeg?auto=compress&cs=tinysrgb&w=1920',
-    'https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?auto=compress&cs=tinysrgb&w=1920',
-    // 'https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=1920',
-    // 'https://images.pexels.com/photos/386009/pexels-photo-386009.jpeg?auto=compress&cs=tinysrgb&w=1920',
-    // 'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=1920',
+const imagesByDevice = {
+    mobile: [
+        imageOrangLari,
+        'https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?auto=compress&cs=tinysrgb&w=600',
+        'https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=600',
+        'https://images.pexels.com/photos/386009/pexels-photo-386009.jpeg?auto=compress&cs=tinysrgb&w=600',
+        'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=600'
+    ],
+    tablet: [
+        imageOrangLari,
+        'https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?auto=compress&cs=tinysrgb&w=1024',
+        'https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=1024',
+        'https://images.pexels.com/photos/386009/pexels-photo-386009.jpeg?auto=compress&cs=tinysrgb&w=1024',
+        'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=1024'
+    ],
+    laptop: [
+        imageOrangLari,
+        'https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?auto=compress&cs=tinysrgb&w=1440',
+        'https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=1440',
+        'https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=1440',
+        'https://images.pexels.com/photos/386009/pexels-photo-386009.jpeg?auto=compress&cs=tinysrgb&w=1440',
+        'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=1440'
+    ],
+    monitor: [
+        imageOrangLari,
+        'https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?auto=compress&cs=tinysrgb&w=2560',
+        'https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=2560',
+        'https://images.pexels.com/photos/386009/pexels-photo-386009.jpeg?auto=compress&cs=tinysrgb&w=2560',
+        'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=2560'
+    ]
+};
 
-];
+const getDeviceType = () => {
+    const width = window.innerWidth;
+    if (width < 768) return 'mobile';
+    if (width < 1024) return 'tablet';
+    if (width < 1920) return 'laptop';
+    return 'monitor';
+};
+
 
 export default function Home() {
     const [currentImage, setCurrentImage] = useState(0);
+    const [deviceType, setDeviceType] = useState(getDeviceType());
+    const [images, setImages] = useState(imagesByDevice[deviceType]);
+
+
+    useEffect(() => {
+        const handleResize = () => {
+            const newDeviceType = getDeviceType();
+            if (newDeviceType !== deviceType) {
+                setDeviceType(newDeviceType);
+                setImages(imagesByDevice[newDeviceType]);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [deviceType]);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -24,7 +71,27 @@ export default function Home() {
         }, 5000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [images.length]);
+
+    const getBackgroundSize = () => {
+        if (deviceType === 'mobile') return '100%';
+        return '75%';
+    };
+
+    const getBackgrounPositionn = () => {
+        if (deviceType === 'mobile') return 'center';
+        return 'left';
+    };
+
+    const backgroundSize = getBackgroundSize();
+    const backgroundPosition = getBackgrounPositionn();
+
+    // MODIFIED: Button placement logic for right-center alignment
+    const buttonPlacementClass = deviceType === 'mobile'
+        ? 'bottom-4 inset-x-0 flex justify-center' // Centered on mobile
+        // Right-Center alignment: absolute, full height (inset-y-0), right-aligned (right-8), and vertically centered (items-center)
+        : 'inset-y-0 right-8 flex items-center justify-end';
+
 
     const openBuyTicket = (() => {
         const URL = "https://artatix.co.id/event/runacrossthesustain_rats";
@@ -37,12 +104,14 @@ export default function Home() {
                 {images.map((image, index) => (
                     <div
                         key={index}
-                        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+                        className={`absolute inset-0 bg-center transition-opacity duration-1000 ${
                             index === currentImage ? 'opacity-100' : 'opacity-0'
                         }`}
                         style={{
                             backgroundImage: `url('${image}')`,
-                            width: '75%'
+                            backgroundSize: backgroundSize,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: backgroundPosition,
                         }}
                     />
                 ))}
@@ -51,23 +120,25 @@ export default function Home() {
 
                 <Header/>
 
-                <div className="relative z-10 flex items-center justify-end h-full min-h-[calc(100vh-200px)] px-8">
-                    {/*<div className="text-center text-white max-w-4xl">*/}
-                    {/*  <h1 className="text-6xl md:text-7xl font-bold mb-6 tracking-tight">*/}
-                    {/*    CHASE YOUR DREAMS*/}
-                    {/*  </h1>*/}
-                    {/*  <p className="text-xl md:text-2xl mb-8 font-light tracking-wide">*/}
-                    {/*    Life is an adventure waiting to be explored*/}
-                    {/*  </p>*/}
+                {/* Main Content Area (e.g., for centered text) */}
+                <div className="relative z-10 flex items-center justify-center h-full min-h-[calc(100vh-200px)] px-8">
+                    {/* Placeholder for H1/P text */}
+                    <div className="text-white max-w-4xl mx-auto w-full text-center">
+
+                    </div>
+                </div>
+
+                <div className={`absolute z-10 p-4 w-full h-full ${buttonPlacementClass}`}>
                     <button
                         className="bg-white text-black px-8 py-4 text-lg font-semibold hover:bg-yellow-300 transition-all transform hover:scale-105 shadow-lg rounded-xl"
                         onClick={openBuyTicket}
                     >
                         BUY TICKET
                     </button>
-                    {/*</div>*/}
                 </div>
 
+
+                {/* Image Navigation Dots */}
                 <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
                     {images.map((_, index) => (
                         <button
@@ -83,7 +154,7 @@ export default function Home() {
 
             <Footer/>
 
-            <CookieConsentComponent />
+            <CookieConsentComponent/>
         </div>
     );
 }
