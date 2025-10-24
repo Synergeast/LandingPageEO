@@ -43,15 +43,15 @@ export default function Header() {
                 {/*<Truck size={40} className="text-yellow-400" strokeWidth={2.5} />*/}
                 {/*<span className="text-white text-2xl font-bold tracking-wider">Synergeast</span>*/}
 
-                <a href="/" className="flex items-center space-x-2 mb-6">
-                    <img src={ImageLogo} alt={'Logo'} style={{width: '200px'}}/>
+                <a href="/" className="flex items-center transition-opacity duration-300 hover:opacity-90 space-x-2 mb-6">
+                    <img src={ImageLogo} alt={'Logo'} className="w-32 sm:w-44 md:w-56 h-auto transition-all duration-300 rounded-lg"/>
                 </a>
 
             </div>
 
-            <div className="text-white text-right">
-                <div className="text-2xl font-sans">{formatWeekDay(dateTime)}</div>
-                <div className="text-sm font-semibold">{formatDate(dateTime)} &nbsp;&nbsp;(WIB / UTC+7)</div>
+            <div className="text-white text-right transition-all duration-300">
+                <div className="text-xl sm:text-2xl font-extrabold leading-tight text-yellow-400 font-sans">{formatWeekDay(dateTime)}</div>
+                <div className="text-xs sm:text-sm font-medium opacity-80 mt-1">{formatDate(dateTime)} &nbsp;&nbsp;(WIB / UTC+7)</div>
                 {/*<div className="text-lg font-mono">{formatTime(dateTime)} </div>*/}
             </div>
         </header>
