@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import ImageLogo from '../images/Logo-Synergeast-New-(White).png';
 
 export default function Header() {
-    const myDateTime = new Date("2025-11-23");
+    const myDateTime = new Date();
 
     const [dateTime, setDateTime] = useState(myDateTime);
 
